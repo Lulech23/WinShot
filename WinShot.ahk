@@ -19,41 +19,51 @@ SetWorkingDir, %A_ScriptDir%
 
 ; Initialize screenshot function
 ScreenShot() {
-    Loops := 0
+    Loops := 5 ; Time to wait for hold
     Loop {
         Sleep, 100
-        If (Loops < 5) {
+        If (Loops > 0) {
             If (!GetKeyState("LWin", "P")) {
                 Return False
             }
         }
-        If (Loops = 5) {
-            SoundBeep, 16000, 150
+        If (Loops = 0) {
             Send, {LWin down}{Alt down}{PrintScreen down}{PrintScreen up}{Alt up}{LWin up}
             Return True
         }
-        Loops++
+        Loops--
     }
 }
 
 ; Initialize video record function
 VideoRecord() {
-    Send, {LWin down}{Alt down}{r down}{r up}{Alt up}{LWin up}
+    Loops := 15 ; Time to wait for double-press
+    Loop {
+        Sleep, 1
+        If (Loops > 0) {
+            If (GetKeyState("LWin", "P")) {
+                Send, {LWin down}{Alt down}{r down}{r up}{Alt up}{LWin up}
+                Return True
+            }
+        }
+        If (Loops = 0) {
+            ; Otherwise passthrough if single-pressed
+            Return False
+        }
+        Loops--
+    }
 }
 
 ; Assign functions to key
 LWin::
-If (ScreenShot() = True) {
+If (ScreenShot()) {
     ; Take screenshot, if long-pressed
     KeyWait, LWin
     Return
 } Else {
     KeyWait, LWin
-    KeyWait, LWin, D T0.15
-    If (!ErrorLevel) {
-        ; Take video, if double-pressed
-        VideoRecord()
-    } Else {
+    ; Take video, if double-pressed
+    If (!VideoRecord()) {
         ; Otherwise passthrough if single-pressed
         Send, {LWin}
     }
