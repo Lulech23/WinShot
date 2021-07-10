@@ -18,5 +18,8 @@ WinShot transforms the Windows key on your keyboard into a one-touch solution fo
 All functionality is handled by the Xbox Game Bar. Configure in **Windows Settings > Gaming > Xbox Game Bar** for best results (leave shortcuts as their defaults).
 
 ## Known Issues
+* **Windows Defender falsely identifies WinShot.exe as a virus**
+  * This is _extremely_ common for remapper scripts. After all, we're altering the behavior of your keyboard. But that's you're here for, no? 
+  * First, take a look at the source code to see for yourself whether anything nefarious is going on. Once you're satisfied, add an exception to Windows Defender to allow WinShot through. You may have to re-download if the original file was forcibly removed.
 * **Regular Windows key shortcuts are inaccessible while WinShot is active**
   * Workaround: When not playing games, right-click the taskbar icon and check "Suspend Hotkeys"
